@@ -44,7 +44,7 @@ class CategoryController extends Controller
     {
         Category::create($request->validated());
 
-        return to_route("category.index")->with('status', 'Registro creado.');
+        return to_route("category.index")->with('status', 'Registro creado.')->with('task', 'category');;
     }
 
     /**
@@ -80,7 +80,7 @@ class CategoryController extends Controller
     {
         $category->update($request->validated());
 
-        return to_route('category.index')->with('status', 'Registro actualizado.');
+        return to_route('category.index')->with('status', 'Registro actualizado.')->with('task', 'category');;
     }
 
     /**

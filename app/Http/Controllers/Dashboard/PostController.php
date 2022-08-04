@@ -3,9 +3,6 @@
 namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Validator;
 
 use App\Models\Category;
 use App\Http\Requests\Post\StoreRequest;
@@ -47,30 +44,9 @@ class PostController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        //dd(request('title'));
-        //dd($request->all());
-
-        /*$validated = Validator::make($request->all(), [
-            "title" => "required|min:5|max:500",
-            "slug" => "required|min:5|max:500",
-            "content" => "required|min:10",
-            "category_id" => "required",
-            "description" => "required|min:10",
-            "posted" => "required"
-        ]);*/
-
-        //dd($validated->errors());
-        //dd($validated->fails());
-
-        // $data = array_merge($request->all(), ['image' => '']);
-
-        // $data['slug'] = Str::slug($data['title']);
-
-        //dd($data);
-
         Post::create($request->validated());
 
-        return to_route("post.index");
+        return to_route("post.index")->with('status', 'Registro creado.')->with('task', 'post');
     }
 
     /**
@@ -81,7 +57,11 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view("dashboard.post.show", compact('post'));
+        $posts = Post::all()
+                    ->where('category_id', '=', $post->category->id)
+                    ->where('id', '!=', $post->id);
+
+        return view("dashboard.post.show", compact('post', 'posts'));
     }
 
     /**
@@ -116,8 +96,7 @@ class PostController extends Controller
 
         $post->update($data);
 
-        //return redirect()->route("post.index");
-        return to_route("post.index")->with('status', "Registro actualizado.");
+        return to_route("post.index")->with('status', "Registro actualizado.")->with('task', 'post');;
     }
 
     /**
