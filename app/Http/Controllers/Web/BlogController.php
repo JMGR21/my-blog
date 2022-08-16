@@ -15,7 +15,7 @@ class BlogController extends Controller
      */
     public function index()
     {
-        $posts = Post::where("posted", "yes")->get();
+        $posts = Post::where("posted", "yes")->limit(15)->get();
 
         return view("web.blog.index", compact("posts"));
     }
